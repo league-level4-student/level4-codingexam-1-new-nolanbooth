@@ -24,6 +24,9 @@ public class Event {
 	public Event(int time, String description) {
 		this.description = description;
 		this.time = time;
+	}public String toString() {
+		
+		return "Time: " + time + ", Event: " + description;
 	}
 	
 	

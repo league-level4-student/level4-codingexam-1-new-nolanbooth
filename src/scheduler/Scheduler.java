@@ -1,6 +1,7 @@
 package scheduler;
 
 import java.util.Scanner;
+import java.util.TreeMap;
 
 /*
  * Objective: Create a weekly scheduling application.
@@ -29,7 +30,7 @@ public class Scheduler {
 
 	static daysOfWeek[] week = daysOfWeek.values();
 
-	public static void main(String[] args) {
+	public static void main(String[] args) throws SchedulingConflictException {
 		
 		
 		Scanner scan = new Scanner(System.in);
@@ -54,75 +55,75 @@ public class Scheduler {
 				System.out.println("What day of the week?");
 				String day;
 				day = scan.next();
-
-				switch (day) {
-				case "sunday":
-					//System.out.println("ja");
-//					if(week[0].schedule.getHead() != null) {
-//					Node<Event> node = week[0].schedule.getHead();
-//					bill: while (node != null) {
-//						if (node.getValue().getTime() == hour) {
-//							System.out.println("cannot add two events at the same time");
-//						} else if (node.getValue().getTime() < hour) {
-//							node = node.getNext();
-//						} else if (node.getValue().getTime() > hour) {
-//							week[0].schedule.add(new Event(hour, theEvent));
-//							
-//							break bill;
-//						}
-//					}
-//				}else {
-//					week[0].schedule.add(new Event(hour, theEvent));
-//					
-//					
-//					
-//				}
-					
-					week[0].schedule.add(new Event(hour, theEvent));
-					break;
-				case "monday":
-					week[1].schedule.add(new Event(hour, theEvent));
-					break;
-				case "tuesday":
-					week[2].schedule.add(new Event(hour, theEvent));
-					break;
-				case "wednesday":
-					week[3].schedule.add(new Event(hour, theEvent));
-					break;
-				case "thursday":
-					week[4].schedule.add(new Event(hour, theEvent));
-					break;
-				case "friday":
-					week[5].schedule.add(new Event(hour, theEvent));
-					break;
-				case "saturday":
-					week[6].schedule.add(new Event(hour, theEvent));
-					break;
-				}
+				int theDayCounter = 0;
+				
+				Node<Event> node = week[theDayCounter].schedule.getHead();
+				theDayCounter = daysOfWeek.valueOf(day.toUpperCase()).ordinal();
+				node = week[theDayCounter].schedule.getHead();
+				for(int i = 0; i < week[theDayCounter].schedule.size(); i++) {
+					if(hour == node.getValue().getTime()) {
+						throw new SchedulingConflictException("cannot add two things at the same time!");
+					}
+						node = node.getNext();
+						
+					}
+				week[theDayCounter].schedule.add(new Event(hour, theEvent));
+				
+				
 
 				break;
+			
 			case "view":
 				
 				System.out.println("Which day?");
 				String theDay = scan.nextLine();
-				switch(theDay) {
-				case "sunday":
-					Node<Event> node = week[0].schedule.getHead();
-					for(int i = 0; i < week[0].schedule.size(); i++) {
-						System.out.println("Time: " + node.getValue().getTime() + " Thing: " + node.getValue().getDesc());
-						node = node.getNext();
-					}
-					break;
+				int dayNumber = daysOfWeek.valueOf(theDay.toUpperCase()).ordinal();;
 				
+				TreeMap<Integer, Event> tree = new TreeMap<Integer, Event>();
+				node = week[dayNumber].schedule.getHead();
 				
+				for(int i = 0; i < week[dayNumber].schedule.size(); i++) {
+					tree.put(node.getValue().getTime(), node.getValue());
+					node = node.getNext();
+					
+					
 				}
+				
+				System.out.println("Schedule: ");
+				
+				for(Event e : tree.values()) {
+					System.out.println(e.toString());
+				}
+				
+				
 				break;
 			case "remove":
 				
 				System.out.println("Which day?");
-
+				String theDay1 = scan.nextLine();
+				int dayNumber1 = daysOfWeek.valueOf(theDay1.toUpperCase()).ordinal();
+				
+				
+				System.out.println("What time?");
+				int theHour = scan.nextInt();
+				
+				node = week[dayNumber1].schedule.getHead();
+				
+				for(int i = 0; i < week[dayNumber1].schedule.size(); i++) {
+					if(node.getValue().getTime() == theHour) {
+						week[dayNumber1].schedule.remove(i);
+					}else {
+						node = node.getNext();
+					}
+					
+					
+				}
+				
+				
 				break;
 			case "quit":
+				System.out.println("ok");
+				
 				System.exit(0);
 				
 				
